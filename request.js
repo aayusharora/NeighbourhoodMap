@@ -17,13 +17,14 @@ app.listen(port);
 
 app.post('/', function(req,res) {
   
-    var data = coordinates(req.body.latitude, req.body.longitude);
-    console.log(data);
-    res.send('ok');
+    coordinates(req.body.latitude, req.body.longitude,function(data) {
+       res.send(data);
+    });
+   
 
 })
 
-function coordinates(lat, lng) {
+function coordinates(lat, lng,callback) {
   console.log(lat);
   console.log(lng);
  
@@ -31,9 +32,10 @@ function coordinates(lat, lng) {
   var CLIENT_SECRET = "BVD4TUFEPUY4IX021WFIIWCZTN3UY0RQWMKTSA3CP5IFHZCK"; 
   var url = "https://api.foursquare.com/v2/venues/search?client_id="+ CLIENT_ID +
    "&client_secret="+ CLIENT_SECRET +
-    "&v=20130815&ll="+lat+","+lng+"&query=sushi";
+    "&v=20130815&ll="+lat+","+lng+"&query=food";
 
   console.log(url);
+
   request(url, function (error, response, body) {
       //Check for error
       //console.log(url);
@@ -47,16 +49,12 @@ function coordinates(lat, lng) {
           return console.log('Invalid Status Code Returned:', response.statusCode);
       }
 
-      else {
-        console.log(response);
-        console.log(body);
-      }
-    
-      //All is good. Print the body
-       // Show the HTML for the Modulus homepage.
+     
+        callback(response.body);
+     
 
   })
-
+  
 };
 
 app.listen();
