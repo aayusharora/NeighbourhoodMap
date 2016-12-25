@@ -1,5 +1,5 @@
-var express = require('express')
-var app = express()     // define our app using express
+var express = require('express');
+var app = express();     // define our app using express
 var request = require('request');
 
 var bodyParser = require('body-parser');
@@ -17,22 +17,22 @@ app.listen(port);
 
 app.post('/', function(req,res) {
   
-    coordinates(req.body.latitude, req.body.longitude,function(data) {
+    coordinates(req.body.latitude, req.body.longitude, req.body.query, function(data) {
        res.send(data);
     });
    
 
-})
+});
 
-function coordinates(lat, lng,callback) {
+function coordinates(lat, lng, query, callback) {
   console.log(lat);
   console.log(lng);
- 
+  console.log(query);
   var CLIENT_ID = "4KRLZJS2EXSKBHNSGXGHJIPQQG3LAFRTFZ22XBQ2XTXCUJMS";
   var CLIENT_SECRET = "BVD4TUFEPUY4IX021WFIIWCZTN3UY0RQWMKTSA3CP5IFHZCK"; 
   var url = "https://api.foursquare.com/v2/venues/search?client_id="+ CLIENT_ID +
    "&client_secret="+ CLIENT_SECRET +
-    "&v=20130815&ll="+lat+","+lng+"&query=food";
+    "&v=20130815&ll="+lat+","+lng+"&query="+query ;
 
   console.log(url);
 
@@ -54,8 +54,7 @@ function coordinates(lat, lng,callback) {
      
 
   })
-  
-};
 
+}
 app.listen();
 console.log('Express server started on port %s', port);

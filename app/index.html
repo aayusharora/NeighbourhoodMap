@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 <head>
     <title>Geocoder</title>
 </head>
@@ -16,18 +18,44 @@
     padding: 0;
   }
 
+
 </style>
 
 <body>
-  <input data-bind="value: address"/>
-
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="true" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+            </button>
+            <a class="navbar-brand" href="#">TravelEasy</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse in" aria-expanded="true">
+            <ul class="nav navbar-nav" style="position:relative;top:8px;">
+                <li class="active"><input class="form-control" data-bind="value: query" title="type to search"/></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li class="active"><input class="form-control" data-bind="value: address" title="Change Neighbourhood"/></li>
+            </ul>
+           <!-- <ul class="nav navbar-nav navbar-right">
+                <li><a href="#" data-toggle="popover" title="Popover Header" data-placement="bottom" data-content="Some content inside the popover">Toggle popover</a></li>
+            </ul>-->
+        </div><!--/.nav-collapse -->
+    </div><!--/.container-fluid -->
+</nav>
+  <div id="map" style="z-index:998"></div>
 </body>
 
- <div id="map"></div>
+
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 <script src="external/knockout.js" type="text/javascript"></script>
 <script src="external/viewModel.js" type="text/javascript"></script>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB6bgxT77w97u2wHbxAzqbv2gmojvfggOA"></script>
-
+<script>
+    $(document).ready(function(){
+        $('[data-toggle="popover"]').popover();
+    });
+</script>
 </html>

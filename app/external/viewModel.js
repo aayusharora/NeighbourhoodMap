@@ -3,14 +3,16 @@ function AppViewModel() {
     var self = this;
     
     self.address = ko.observable('Delhi');
+    self.query = ko.observable('Burger');
    
-    this.getUrl = ko.computed(function(address) {
+    this.getUrl = ko.computed(function(address){
 
-      var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+self.address()+"&key=AIzaSyAlQWLkSPjKEvBBbMkVZjBtIminATljqis";  console.log(url);
+       var query = self.query();
+      var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+self.address()+"&key=AIzaSyAlQWLkSPjKEvBBbMkVZjBtIminATljqis";  //console.log(url);
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
-          
+
              var data = JSON.parse(this.responseText).results[0].geometry.location;
               
             self.ajaxCall(data.lat, data.lng);
@@ -20,15 +22,16 @@ function AppViewModel() {
       xhttp.open("GET", url, true);
       xhttp.send(self.latitude);
       
-    })
+    });
 
     this.ajaxCall = function (lat, lng) {
       var locationArray = []; 
-
+      console.log(self.query());
        var coordinate = {
           "latitude" : lat,
-          "longitude" : lng
-       }
+          "longitude" : lng,
+           "query": self.query()
+       };
        
 
       $.ajax({
@@ -39,13 +42,13 @@ function AppViewModel() {
           success: function(data){
               
               var locationData = JSON.parse(data);
-              console.log(locationData.response.venues);
+              //console.log(locationData.response.venues);
               var locationVenues = locationData.response.venues;
               function latlng () {
-                this.lat = null,
-                this.lng = null
-                this.title = null
-              };
+                this.lat = null;
+                this.lng = null;
+                this.title = null;
+              }
 
               for(var i=0; i<locationVenues.length ;i++) {
                 var myLatLng = new latlng();
@@ -68,21 +71,23 @@ function AppViewModel() {
       });
            
         
-    }
+    };
 
     this.initMap= function(locationArray) {
        
        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 14,
+            zoom: 16,
             center: {lat: locationArray[0].lat, lng: locationArray[0].lng}
           });
-      
+
+        var infoWindow = new google.maps.InfoWindow();
+
       for(var i=0;i<locationArray.length;i++) {
         
-        console.log(locationArray[i]);
+       // console.log(locationArray[i]);
 
         (function locationArr(i) {
-          var infoWindow = new google.maps.InfoWindow();
+
           var marker = new google.maps.Marker({
             position: {lat: locationArray[i].lat, lng: locationArray[i].lng},
             map: map,
@@ -91,10 +96,17 @@ function AppViewModel() {
         
         locationArray[i].location = locationArray[i].location == undefined  ? ''  : locationArray[i].location ;
         var content = "<div>" + locationArray[i].title + "</div>" + "<div>" + locationArray[i].location + "</div>";
-        google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){ 
+        google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
+
+          //console.log(infowindow);
+          //var prev_infowindow =false;
+          prev_infowindow = infowindow;
           return function() {
+
               infowindow.setContent(content);
               infowindow.open(map,marker);
+
+
           };
          })(marker,content,infoWindow));  
 
