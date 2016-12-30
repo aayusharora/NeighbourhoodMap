@@ -24,6 +24,10 @@ function AppViewModel() {
       
     });
 
+   this.getItems = function(item){
+      console.log(item);
+    }
+
     this.ajaxCall = function (lat, lng) {
       var locationArray = []; 
       console.log(self.query());
@@ -51,6 +55,7 @@ function AppViewModel() {
               }
 
               for(var i=0; i<locationVenues.length ;i++) {
+                console.log(locationVenues[i]);
                 var myLatLng = new latlng();
                 myLatLng.lat =  locationVenues[i].location.lat;
                 myLatLng.lng =  locationVenues[i].location.lng;
@@ -62,7 +67,7 @@ function AppViewModel() {
 
                 locationArray.push(myLatLng);
               }
-               
+                  
               self.initMap(locationArray);   
           },
           error: function(textstatus, errorThrown) {
@@ -74,28 +79,71 @@ function AppViewModel() {
     };
 
     this.initMap= function(locationArray) {
+       var ul = document.getElementById('items');
        
        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 16,
+            zoom: 12,
             center: {lat: locationArray[0].lat, lng: locationArray[0].lng}
           });
 
         var infoWindow = new google.maps.InfoWindow();
 
+        while (ul.hasChildNodes()) {   
+           ul.removeChild(ul.firstChild);
+        }
+
+      function reset() {
+         var k = document.getElementById("items").getElementsByTagName("li");
+  
+          for(var i=0;i<k.length;i++) {
+            k[i].style.color = '#818181';
+          
+          }
+      }
+       var track;
+
       for(var i=0;i<locationArray.length;i++) {
         
        // console.log(locationArray[i]);
-
-        (function locationArr(i) {
-
+          (function locationArr(i) {
+          
+          var posMark = {lat: locationArray[i].lat, lng: locationArray[i].lng}
           var marker = new google.maps.Marker({
-            position: {lat: locationArray[i].lat, lng: locationArray[i].lng},
+            position: posMark,
             map: map,
             title: locationArray[i].title
           });
-        
+     
         locationArray[i].location = locationArray[i].location == undefined  ? ''  : locationArray[i].location ;
         var content = "<div>" + locationArray[i].title + "</div>" + "<div>" + locationArray[i].location + "</div>";
+        var li = document.createElement("li");
+        li.style.color = '#818181';
+        li.addEventListener('click', pos, false);
+
+        var loc= locationArray[i].location.replace('</br>'," ");
+        var content = loc.length > 0 ? locationArray[i].title +","+ loc : locationArray[i].title;
+        li.appendChild(document.createTextNode(content));
+        ul.appendChild(li);
+       
+        function pos() {
+          reset();
+          map.setCenter(posMark);
+          map.setZoom(14);
+          this.style.color = 'black';
+          marker.setAnimation(google.maps.Animation.BOUNCE);
+          if(track !== undefined) {
+            track.setIcon();
+          }
+          
+          marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+          track = marker;
+          setTimeout(function() {
+            marker.setAnimation(null)
+          }, 1000);
+       }
+
+       
+    
         google.maps.event.addListener(marker,'click', (function(marker,content,infowindow){
 
           //console.log(infowindow);
@@ -113,7 +161,7 @@ function AppViewModel() {
         })(i)
         
         }
-    
+
     }
 
 
