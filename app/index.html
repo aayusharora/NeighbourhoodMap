@@ -33,7 +33,7 @@
 
   /* The navigation menu links */
   .sidenav a {
-      padding: 8px 8px 8px 32px;
+      padding: 4px 4px 4px 12px;
       text-decoration: none;
       font-size: 25px;
       color: #818181;
@@ -49,10 +49,10 @@
     /* Position and style the close button (top right corner) */
     .sidenav .closebtn {
         position: absolute;
-        right: 25px;
+        right: 45px;
         font-size: 36px;
         margin-left: 50px;
-        top: 10px;
+        top: -5px;
         z-index: 1000;
     }
 
@@ -72,7 +72,7 @@
     }
   
   #items {
-    margin-top: 80px;
+    margin-top: 120px;
   }
   @media screen and (max-width: 778px) {
     #items {
@@ -80,7 +80,7 @@
     }
     .icons {
       margin-top: 6px !important;
-      margin-bottom: -12px !important;
+      margin-bottom: 12px !important;
       margin-left: 16px!important;
     }
 
@@ -101,7 +101,7 @@
     background: #fff;
     border-radius: 2px;
     box-sizing: border-box;
-    max-width: 350px
+    max-width: 330px;
     height: 48px;
     border-bottom: 1px solid transparent;
     padding: 12px 104px 11px 64px;
@@ -112,15 +112,15 @@
    .icons {
       padding: 0
       list-style: none;
-      margin-bottom: 28px;
+      margin-bottom: 12px;
       margin-left: 8px;
       margin-top: 68px;
    }
 
-   .icons li {
+   .icons li a{
      display: inline;
-     margin-right: 24px;
    }
+
    i {
     font-size: 18px !important;
     color : #818181;
@@ -128,43 +128,129 @@
    .fa-coffee: hover{
     color : #333;
    }
+  
+  .iconlist:hover > .fa,  .iconlist:active > .fa  {
+    color: black;
+    cursor: pointer;
+   }
+
+   ul.nav.navbar-nav {
+      background-color: white;
+   }
+
+   .neighbourhood {
+    margin-top: 6px;
+   }
+
+  .navbar {
+    margin-bottom: 0;
+   }
+
+   .boxshadow {
+     top: -10px;
+     margin-left: 4px;
+     box-shadow: 2px 2px 2px 2px #c1c1c1;
+   }
+   .iconlist {
+    display: inline;
+   }
+  #loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+  display: none;
+}  
 
 </style>
 
 <body>
-
+<div id="loader"></div>
+<div id="myDiv">
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-    
-    <ul class="nav navbar-nav" style="position:relative;top:8px;">
-      <li class="searchbox active">
-        <input class="form-control" data-bind="value: query" title="type to search"/>
-      </li>
-      <ul class="icons">
-        <li data-bind="click: getItems.bind('coffee')" >
-          <i class="fa fa-coffee" aria-hidden="true"></i>
+    <div class ="search">
+      <ul class="boxshadow nav navbar-nav" style="position:relative;">
+        <li class="searchbox active">
+          <input class="form-control" data-bind="value: query" title="type to search"/>
         </li>
-        <li>
-          <i class="fa fa-beer"  aria-hidden="true"></i>
-        </li>
-        <li> 
-          <i class="fa fa-cutlery"  aria-hidden="true"></i>
-        </li>
-        <li>
-          <i class="fa fa-money"  aria-hidden="true"></i>
-        </li>
-        <li>
-          <i class="fa fa-hospital-o" aria-hidden="true"></i>
-        </li>
+        <ul class="icons">
+          <li class="iconlist">
+           <a href="#" data-toggle="tooltip" data-placement="top" title="Coffee"> 
+            <i class="fa fa-coffee" id="Coffee" data-bind="click: myFunction.bind($data, 'Coffee')" aria-hidden="true"></i>
+           </a>
+          </li>
+          <li class="iconlist">
+           <a href="#" data-toggle="tooltip" data-placement="top" title="Beer">
+            <i class="fa fa-beer" id="Beer" data-bind="click: myFunction.bind($data, 'Beer')" aria-hidden="true"></i>
+           </a> 
+          </li>
+          <li class="iconlist"> 
+           <a href="#" data-toggle="tooltip" data-placement="top" title="Food">
+            <i class="fa fa-cutlery"  id="Food" data-bind="click: myFunction.bind($data, 'Food')" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li class="iconlist">
+            <a href="#" data-toggle="tooltip" data-placement="top" title="ATM">
+            <i class="fa fa-money"  id="ATM" data-bind="click: myFunction.bind($data, 'ATM')" aria-hidden="true"></i>
+            </a>
+          </li>
+          <li class="iconlist">
+            <a href="#" data-toggle="tooltip" data-placement="top" title="Hospital">
+            <i class="fa fa-hospital-o" id="Hospital" data-bind="click: myFunction.bind($data, 'Hospital')" aria-hidden="true"></i>
+            </a>
+          </li>
+        </ul>
       </ul>
-    </ul>
-
+    </div> 
     <ul id="items">
 
     </ul>
 
 </div>
-
+</div>
 <!-- Use any element to open the sidenav -->
 
 <!-- Add all page content inside this div if you want the side nav to push page content to the right (not used if you only want the sidenav to sit on top of the page -->
@@ -174,11 +260,14 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="true" aria-controls="navbar">
                 <span class="sr-only">Toggle navigation</span>
             </button>
-        <span class="navbar-brand" onclick="openNav()">TravelEasy</span>
+        <span class="navbar-brand" onclick="openNav()">
+          <i class="fa fa-bars" aria-hidden="true"></i>
+        TravelEasy
+        </span>
         </div>
         <div id="navbar" class="navbar-collapse collapse in" aria-expanded="true">
         
-            <ul class="nav navbar-nav navbar-right">
+            <ul class=" neighbourhood nav navbar-nav navbar-right">
                 <li class="active"><input class="form-control" data-bind="value: address" title="Change Neighbourhood"/></li>
             </ul>
            <!-- <ul class="nav navbar-nav navbar-right">
@@ -202,6 +291,7 @@
     /* Set the width of the side navigation to 250px */
     function openNav() {
         document.getElementById("mySidenav").style.width = "350px";
+       
     }
 
     /* Set the width of the side navigation to 0 */

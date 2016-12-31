@@ -2,35 +2,53 @@
 function AppViewModel() {
     var self = this;
     
-    self.address = ko.observable('Delhi');
+    self.address = ko.observable('Bengaluru');
     self.query = ko.observable('Burger');
-   
+    
+    this.myFunction = function(item){
+       if(this.coloritem !== undefined) {
+           console.log(this.coloritem);
+           this.coloritem.style.color = '#818181';
+       }   
+    
+      self.query(item);
+      var query = document.getElementById(item);
+      query.style.color = 'black';
+      this.coloritem = query;
+
+    }
+
     this.getUrl = ko.computed(function(address){
 
-       var query = self.query();
-      var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+self.address()+"&key=AIzaSyAlQWLkSPjKEvBBbMkVZjBtIminATljqis";  //console.log(url);
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) {
+      var query = self.query();
+      if(self.address().length > 0) {
+        var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+self.address()+"&key=AIzaSyAlQWLkSPjKEvBBbMkVZjBtIminATljqis";  //console.log(url);
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.readyState == 4 && this.status == 200) {
 
-             var data = JSON.parse(this.responseText).results[0].geometry.location;
-              
-            self.ajaxCall(data.lat, data.lng);
-             //self.sendData(latitude,longitude);
+               var data = JSON.parse(this.responseText).results[0].geometry.location;
+                
+              self.ajaxCall(data.lat, data.lng);
+               //self.sendData(latitude,longitude);
+          }
+        };
+
+        xhttp.open("GET", url, true);
+        xhttp.send();
+
         }
-      };
-      xhttp.open("GET", url, true);
-      xhttp.send(self.latitude);
+      else {
+        alert("Please enter a valid Neighbourhood");
+        self.address("Bengaluru");
+      }  
+      
       
     });
 
-   this.getItems = function(item){
-      console.log(item);
-    }
-
     this.ajaxCall = function (lat, lng) {
-      var locationArray = []; 
-      console.log(self.query());
+       
+       var locationArray = []; 
        var coordinate = {
           "latitude" : lat,
           "longitude" : lng,
@@ -44,7 +62,8 @@ function AppViewModel() {
           data: JSON.stringify(coordinate),
           contentType: 'application/json',
           success: function(data){
-              
+
+               
               var locationData = JSON.parse(data);
               //console.log(locationData.response.venues);
               var locationVenues = locationData.response.venues;
@@ -69,6 +88,8 @@ function AppViewModel() {
               }
                   
               self.initMap(locationArray);   
+                 document.getElementById('loader').style.display ='none';
+               document.getElementById('myDiv').style.display ='block'; 
           },
           error: function(textstatus, errorThrown) {
               alert('text status ' + textstatus + ', err ' + errorThrown);
@@ -80,11 +101,15 @@ function AppViewModel() {
 
     this.initMap= function(locationArray) {
        var ul = document.getElementById('items');
-       
-       var map = new google.maps.Map(document.getElementById('map'), {
+       if(locationArray[0].lat !== undefined ){
+           var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 12,
             center: {lat: locationArray[0].lat, lng: locationArray[0].lng}
           });
+       }
+       else {
+        alert("Enter a valid search");
+       }
 
         var infoWindow = new google.maps.InfoWindow();
 
