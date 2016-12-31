@@ -58,7 +58,7 @@ function AppViewModel() {
 
       $.ajax({
           type: "POST",
-          url:"http://localhost:3000",
+          url:"https://hidden-chamber-82669.herokuapp.com/",
           data: JSON.stringify(coordinate),
           contentType: 'application/json',
           success: function(data){
