@@ -26,8 +26,8 @@ app.post('/', function(req,res) {
 
 function coordinates(lat, lng, query, callback) {
   
-  var CLIENT_ID = "4KRLZJS2EXSKBHNSGXGHJIPQQG3LAFRTFZ22XBQ2XTXCUJMS";
-  var CLIENT_SECRET = "BVD4TUFEPUY4IX021WFIIWCZTN3UY0RQWMKTSA3CP5IFHZCK"; 
+  var CLIENT_ID = "";
+  var CLIENT_SECRET = ""; 
   var url = "https://api.foursquare.com/v2/venues/search?client_id="+ CLIENT_ID +
    "&client_secret="+ CLIENT_SECRET +
     "&v=20130815&ll="+lat+","+lng+"&query="+query ;
