@@ -24,11 +24,14 @@ function AppViewModel() {
       if(self.address().length > 0) {
         var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+self.address()+"&key=AIzaSyAlQWLkSPjKEvBBbMkVZjBtIminATljqis";  //console.log(url);
         var xhttp = new XMLHttpRequest();
+        //document.getElementById('loader').style.display ='block';
+        //document.getElementById('myDiv').style.display ='none';    
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
 
                var data = JSON.parse(this.responseText).results[0].geometry.location;
-                
+              //document.getElementById('loader').style.display ='none';
+              //document.getElementById('myDiv').style.display ='block';    
               self.ajaxCall(data.lat, data.lng);
                //self.sendData(latitude,longitude);
           }
@@ -58,7 +61,7 @@ function AppViewModel() {
 
       $.ajax({
           type: "POST",
-          url:"https://hidden-chamber-82669.herokuapp.com/",
+          url:"http://localhost:3000/",
           data: JSON.stringify(coordinate),
           contentType: 'application/json',
           success: function(data){
@@ -83,13 +86,13 @@ function AppViewModel() {
                 myLatLng.location = locationVenues[i].location.crossStreet !== undefined ? locationVenues[i].location.address + '</br>' + locationVenues[i].location.crossStreet : 
                                     locationVenues[i].location.city !== undefined && locationVenues[i].location.crossStreet !== undefined ? locationVenues[i].location.address + '</br>' + locationVenues[i].location.crossStreet + '</br>'+ locationVenues[i].location.city :
                                      locationVenues[i].location.address;      
-
+                
                 locationArray.push(myLatLng);
               }
-                  
+              document.getElementById('loader').style.display ='none';
+              document.getElementById('myDiv').style.display ='block';     
               self.initMap(locationArray);   
-                 document.getElementById('loader').style.display ='none';
-               document.getElementById('myDiv').style.display ='block'; 
+              
           },
           error: function(textstatus, errorThrown) {
               alert('text status ' + textstatus + ', err ' + errorThrown);
