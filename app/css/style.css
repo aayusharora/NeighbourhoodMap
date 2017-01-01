@@ -1,0 +1,192 @@
+  #map {
+    height: 100%;
+  }
+  /* Optional: Makes the sample page fill the window. */
+  html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .sidenav {
+    height: 100%; /* 100% Full-height */
+    width: 0; /* 0 width - change this with JavaScript */
+    position: fixed; /* Stay in place */
+    z-index: 1000; /* Stay on top */
+    top: 0;
+    left: 0;
+    background-color:  #fff; /* Black*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 10px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+  }
+
+  /* The navigation menu links */
+  .sidenav a {
+      padding: 4px 4px 4px 12px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #818181;
+      display: block;
+      transition: 0.3s
+  }
+
+    .sidenav a:hover, .offcanvas a:focus{
+        color: #f1f1f1;
+    }
+
+    .sidenav .closebtn {
+        position: absolute;
+        right: 45px;
+        font-size: 36px;
+        margin-left: 50px;
+        top: -5px;
+        z-index: 1000;
+    }
+
+    #main {
+        transition: margin-left .5s;
+        padding: 20px;
+    }
+
+    .navbar-brand {
+        cursor: pointer;
+    }
+    /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+    @media screen and (max-height: 450px) {
+        .sidenav {padding-top: 15px;}
+        .sidenav a {font-size: 18px;}
+    }
+  
+  #items {
+    margin-top: 120px;
+  }
+  @media screen and (max-width: 778px) {
+    #items {
+      margin-top: 40px;
+    }
+    .icons {
+      margin-top: 6px !important;
+      margin-bottom: 12px !important;
+      margin-left: 16px!important;
+    }
+
+  }
+  #items li {
+    font-weight: 100;
+    color: #777;
+    font-size: 13px;;
+    padding: 4px;
+    cursor: pointer;
+    word-wrap: break-word;
+    margin: 2px;
+    list-style: none;
+  }
+  
+  .searchbox {
+    position: relative;
+    background: #fff;
+    border-radius: 2px;
+    box-sizing: border-box;
+    max-width: 330px;
+    height: 48px;
+    border-bottom: 1px solid transparent;
+    padding: 12px 104px 11px 64px;
+    transition-property: background,box-shadow;
+    transition-duration: 0.3s;
+   }
+
+   .icons {
+      padding: 0
+      list-style: none;
+      margin-bottom: 12px;
+      margin-left: 8px;
+      margin-top: 68px;
+   }
+
+   .icons li a{
+     display: inline;
+   }
+
+   i {
+    font-size: 18px !important;
+    color : #818181;
+   }
+   .fa-coffee: hover{
+    color : #333;
+   }
+  
+  .iconlist:hover > .fa,  .iconlist:active > .fa  {
+    color: black;
+    cursor: pointer;
+   }
+
+   ul.nav.navbar-nav {
+      background-color: white;
+   }
+
+   .neighbourhood {
+    margin-top: 6px;
+   }
+
+  .navbar {
+    margin-bottom: 0;
+   }
+
+   .boxshadow {
+     top: -10px;
+     margin-left: 4px;
+     box-shadow: 2px 2px 2px 2px #c1c1c1;
+   }
+   .iconlist {
+    display: inline;
+   }
+  #loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+  display: none;
+}  
