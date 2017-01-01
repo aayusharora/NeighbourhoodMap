@@ -18,7 +18,7 @@
     <div class ="search">
       <ul class="boxshadow nav navbar-nav" style="position:relative;">
         <li class="searchbox active">
-          <input class="form-control" data-bind="value: query" title="type to search"/>
+          <input class="form-control"  title="type to search"/>
         </li>
         <ul class="icons">
           <li class="iconlist">
@@ -48,10 +48,13 @@
           </li>
         </ul>
       </ul>
-    </div> 
-    <ul id="items">
+    </div>
 
-    </ul>
+        <ul data-bind="foreach: locationArray">
+            <li data-bind="text: title"></li>
+
+        </ul>
+
 
 </div>
 </div>

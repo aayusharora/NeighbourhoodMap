@@ -5,8 +5,15 @@ function AppViewModel() {
     
     self.address = ko.observable('Bengaluru');
     self.query = ko.observable('Burger');
+    self.locationArray = ko.observableArray();
+    this.people = [
+        { name: 'Franklin', credits: 250 },
+        { name: 'Mario', credits: 5800 }
+    ]
+    console.log(self.locationArray());
     
     this.myFunction = function(item){
+
        if(this.coloritem !== undefined) {
            this.coloritem.style.color = '#818181';
        }   
@@ -16,7 +23,7 @@ function AppViewModel() {
       query.style.color = 'black';
       this.coloritem = query;
 
-    }
+    };
 
     this.getUrl = ko.computed(function(address){
 
@@ -45,8 +52,8 @@ function AppViewModel() {
     });
 
     this.ajaxCall = function (lat, lng) {
-       
-       var locationArray = []; 
+        self.locationArray([]);
+
        var coordinate = {
           "latitude" : lat,
           "longitude" : lng,
@@ -65,31 +72,39 @@ function AppViewModel() {
             var locationData = JSON.parse(data);
             //console.log(locationData.response.venues);
             var locationVenues = locationData.response.venues;
-            function latlng () {
-              this.lat = null;
-              this.lng = null;
-              this.title = null;
-              this.crossStreet = null;
-              this.location = null;
+            function latlng (lat,lng,title,crossStreet,location) {
+              this.lat = lat;
+              this.lng =lng;
+              this.title = title;
+              this.crossStreet = crossStreet;
+              this.location = location;
             }
 
               for(var i=0; i<locationVenues.length ;i++) {
-              
-                var myLatLng = new latlng();
-                myLatLng.lat =  locationVenues[i].location.lat;
-                myLatLng.lng =  locationVenues[i].location.lng;
-                myLatLng.title = locationVenues[i].name;
-                myLatLng.crossStreet = locationVenues[i].location.crossStreet;
-                myLatLng.location = locationVenues[i].location.crossStreet !== undefined ? locationVenues[i].location.address + '</br>' + locationVenues[i].location.crossStreet : 
-                                    locationVenues[i].location.city !== undefined && locationVenues[i].location.crossStreet !== undefined ? locationVenues[i].location.address + '</br>' + locationVenues[i].location.crossStreet + '</br>'+ locationVenues[i].location.city :
-                                     locationVenues[i].location.address;      
-                
-                locationArray.push(myLatLng);
+
+               var locat = locationVenues[i].location.crossStreet !== undefined ? locationVenues[i].location.address + locationVenues[i].location.crossStreet :
+                                   locationVenues[i].location.city !== undefined && locationVenues[i].location.crossStreet !== undefined ? locationVenues[i].location.address  + locationVenues[i].location.crossStreet +  locationVenues[i].location.city :
+                                   locationVenues[i].location.address;
+
+                  var myLatLng = new latlng(locationVenues[i].location.lat,
+                                            locationVenues[i].location.lng,
+                                            locationVenues[i].name,
+                                            locationVenues[i].location.crossStreet,
+                                            locat
+                                            );
+
+                  self.locationArray.push({'lat': locationVenues[i].location.lat,
+                      'lng':locationVenues[i].location.lng,
+                      'title':locationVenues[i].name,
+                      'crossStreet':locationVenues[i].location.crossStreet,
+                      'locat':locat,
+                       'id': i});
+
               }
 
               document.getElementById('loader').style.display ='none';
               document.getElementById('myDiv').style.display ='block';     
-              self.initMap(locationArray);   
+              self.initMap(self.locationArray());
               
           },
           error: function(textstatus, errorThrown) {
@@ -101,7 +116,8 @@ function AppViewModel() {
     };
 
     this.initMap= function(locationArray) {
-      
+        console.log(locationArray)
+
        var ul = document.getElementById('items');
        var locationInfo = locationArray;
        var infoWindow = new google.maps.InfoWindow();  
@@ -120,14 +136,19 @@ function AppViewModel() {
 
       function clearSidenav() {
 
-        while (ul.hasChildNodes()) {   
-           ul.removeChild(ul.firstChild);
+      if(ul !== null) {
+          while (ul.hasChildNodes()) {
+              ul.removeChild(ul.firstChild);
+          }
+      }
+
         }
 
-      }
+
+
      
       function setMap(locationArray) {
-
+          console.log(locationArray[0].lat);
 
         if(locationArray[0].lat !== undefined ){
             var map = new google.maps.Map(document.getElementById('map'), {
@@ -142,7 +163,7 @@ function AppViewModel() {
   
 
       for(var i=0;i<locationArray.length;i++) {
-        
+
        // console.log(locationArray[i]);
       (function locationArr(i) {
           
@@ -155,14 +176,12 @@ function AppViewModel() {
      
           locationArray[i].location = locationArray[i].location == undefined  ? ''  : locationArray[i].location ;
           var content = "<div>" + locationArray[i].title + "</div>" + "<div>" + locationArray[i].location + "</div>";
-          var li = document.createElement("li");
-          li.style.color = '#818181';
-          li.addEventListener('click', pos, false);
 
-          var loc= locationArray[i].location.replace('</br>'," ");
-          var content = loc.length > 0 ? locationArray[i].title +","+ loc : locationArray[i].title;
-          li.appendChild(document.createTextNode(content));
-          ul.appendChild(li);
+          //li.style.color = '#818181';
+
+          //li.addEventListener('click', pos, false);
+
+
     
         function pos() {
 
