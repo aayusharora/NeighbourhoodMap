@@ -18,8 +18,9 @@
     <div class ="search">
       <ul class="boxshadow nav navbar-nav" style="position:relative;">
         <li class="searchbox active">
-          <input class="form-control"  title="type to search"/>
+          <input class="form-control" data-bind="textInput: input"  title="type to search"/>
         </li>
+       </ul>
         <ul class="icons">
           <li class="iconlist">
            <a href="#" data-toggle="tooltip" data-placement="top" title="Coffee"> 
@@ -50,7 +51,7 @@
       </ul>
     </div>
 
-        <ul data-bind="foreach: locationArray">
+        <ul data-bind="foreach: mainArray">
             <li data-bind="text: title"></li>
 
         </ul>
