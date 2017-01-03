@@ -101,7 +101,6 @@
       list-style: none;
       margin-bottom: 12px;
       margin-left: 8px;
-      margin-top: 68px;
    }
 
    .icons li a{
@@ -112,7 +111,7 @@
     font-size: 18px !important;
     color : #818181;
    }
-   .fa-coffee: hover{
+   .fa-coffee:hover{
     color : #333;
    }
   
@@ -146,8 +145,6 @@
   left: 50%;
   top: 50%;
   z-index: 1;
-  width: 150px;
-  height: 150px;
   margin: -75px 0 0 -75px;
   border: 16px solid #f3f3f3;
   border-radius: 50%;
@@ -157,6 +154,7 @@
   -webkit-animation: spin 2s linear infinite;
   animation: spin 2s linear infinite;
 }
+
 
 @-webkit-keyframes spin {
   0% { -webkit-transform: rotate(0deg); }
@@ -190,3 +188,9 @@
 #myDiv {
   display: none;
 }  
+
+.dataitems {
+  list-style: none;
+  font-size: medium;
+  color: rgba(121, 85, 72, 0.57);
+}

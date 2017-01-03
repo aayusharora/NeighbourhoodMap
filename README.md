@@ -14,7 +14,7 @@
    var CLIENT_SECRET = "//update here"; 
    by using [Foursquare API]("https://developer.foursquare.com/docs/")
 -  Run `npm install` in the respective directory.
--  Run `npm request.js` to run the server on `http://localhost:3000`.
+-  Run `node request.js` to run the server on `http://localhost:3000`.
 
 ## Technology used
 
