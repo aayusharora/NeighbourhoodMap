@@ -44,6 +44,10 @@
         z-index: 1000;
     }
 
+    .active {
+        color: black !important;
+    }
+
     #main {
         transition: margin-left .5s;
         padding: 20px;
@@ -137,9 +141,11 @@
      margin-left: 4px;
      box-shadow: 2px 2px 2px 2px #c1c1c1;
    }
+
    .iconlist {
     display: inline;
    }
+
   #loader {
   position: absolute;
   left: 50%;
@@ -185,9 +191,6 @@
   to{ bottom:0; opacity:1 }
 }
 
-#myDiv {
-  display: none;
-}  
 
 .dataitems {
   list-style: none;

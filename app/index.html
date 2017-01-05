@@ -9,8 +9,8 @@
 </head>
 
 <body>
-<div id="loader"></div>
-<main id="myDiv">
+<div id="loader"  data-bind="visible: data()"></div> <!-- knockout visible binding -->
+<main id="myDiv"  data-bind="visible: !data()"> <!-- semantic main tag -->
 <div id="mySidenav" class="sidenav">
     <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
     <div class ="search">
@@ -19,39 +19,39 @@
           <input class="form-control" data-bind="textInput: input"  title="type to search"/>
         </li>
        </ul>
-        <ul class="icons">
+        <ul class="icons" >
           <li class="iconlist">
-           <a href="#" data-toggle="tooltip" data-placement="top" title="Coffee"> 
-            <i class="fa fa-coffee" id="Coffee" data-bind="click: myFunction.bind($data, 'Coffee')" aria-hidden="true"></i>
+           <a href="#" data-toggle="tooltip"  data-placement="top" title="Coffee">
+            <i class="fa fa-coffee" id="Coffee" data-bind="click: myFunction.bind($data, 'Coffee'), css: { active: ind('coffee')}" aria-hidden="true"></i>
            </a>
           </li>
           <li class="iconlist">
-           <a href="#" data-toggle="tooltip" data-placement="top" title="Beer">
-            <i class="fa fa-beer" id="Beer" data-bind="click: myFunction.bind($data, 'Beer')" aria-hidden="true"></i>
+           <a href="#" data-toggle="tooltip"  data-placement="top" title="Beer">
+            <i class="fa fa-beer" id="Beer" data-bind="click: myFunction.bind($data, 'Beer'),css: { active: ind('beer')}" aria-hidden="true"></i>
            </a> 
           </li>
           <li class="iconlist"> 
-           <a href="#" data-toggle="tooltip" data-placement="top" title="Food">
-            <i class="fa fa-cutlery"  id="Food" data-bind="click: myFunction.bind($data, 'Food')" aria-hidden="true"></i>
+           <a href="#" data-toggle="tooltip"  data-placement="top" title="Food">
+            <i class="fa fa-cutlery"  id="Food" data-bind="click: myFunction.bind($data, 'Food'),css: { active: ind('food') }" aria-hidden="true"></i>
             </a>
           </li>
           <li class="iconlist">
-            <a href="#" data-toggle="tooltip" data-placement="top" title="ATM">
-            <i class="fa fa-money"  id="ATM" data-bind="click: myFunction.bind($data, 'ATM')" aria-hidden="true"></i>
+            <a href="#" data-toggle="tooltip"  data-placement="top" title="ATM">
+            <i class="fa fa-money"  id="ATM" data-bind="click: myFunction.bind($data, 'ATM'),css: { active: ind('atm')}" aria-hidden="true"></i>
             </a>
           </li>
           <li class="iconlist">
-            <a href="#" data-toggle="tooltip" data-placement="top" title="Hospital">
-            <i class="fa fa-hospital-o" id="Hospital" data-bind="click: myFunction.bind($data, 'Hospital')" aria-hidden="true"></i>
+            <a href="#" data-toggle="tooltip"  data-placement="top" title="Hospital">
+            <i class="fa fa-hospital-o" id="Hospital" data-bind="click: myFunction.bind($data, 'Hospital'),css: { active: ind('hospital')}" aria-hidden="true"></i>
             </a>
           </li>
         </ul>
     </div>
 
-        <ul  id="sidelist" data-bind="foreach: mainArray">
-            <a  href="#" data-bind="click: $parent.removePlace.bind($data,$index())">
+        <ul  id="sidelist"   data-bind="foreach: mainArray">
+            <a  href="#"  data-bind="click: $parent.clickedPlace.bind($data,$index())">
 
-                <li  class="dataitems" data-bind="text: title, attr: {id: 'item'+$index() }" >
+                <li  class="dataitems" data-bind="text: title, attr: {id: 'item'+$index() }, css: { active: $parent.ind($index()) }" >
 
                 </li>
             </a>
@@ -82,6 +82,7 @@
     </div><!--/.container-fluid -->
 </nav>
   <div id="map" style="z-index:998"></div>
+
 </body>
 
 
