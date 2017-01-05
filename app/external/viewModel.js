@@ -76,7 +76,7 @@ function AppViewModel() {
         if(coordinate.latitude !== undefined||'' && coordinate.longitude !== undefined||'') {
             $.ajax({
                 type: "POST",
-                url:"http://localhost:3000/", // will be updated in production mode
+                url:"https://watround.herokuapp.com/", // will be updated in production mode
                 data: JSON.stringify(coordinate),
                 contentType: 'application/json',
                 success: function(data){
