@@ -7,6 +7,8 @@ function AppViewModel() {
     self.query = ko.observable('Burger');
     self.input = ko.observable('Burger');
     self.arrmarker = [];
+    self.lat = ko.observable(12.9716);
+    self.lng = ko.observable(77.5946);
     self.locationArray = ko.observableArray();
     self.mainArray = ko.observableArray();
 
@@ -77,13 +79,8 @@ function AppViewModel() {
 
         self.mainArray([]);
         var filter = self.input().replace(/ /g,'').toLowerCase();
-        if(self.map !== null) {
-            self.map.setZoom(12);
-        }
-
         if (!filter) {
             self.mainArray(self.locationArray());
-
 
         } else {
             clearOverlays();
@@ -123,16 +120,18 @@ function AppViewModel() {
 
     this.getUrl = ko.computed(function(address){
 
-      var query = self.query();
+      //var query = self.query();
       if(self.address().length > 0) {
-
+         console.log("this url working");
+         // Runs when user changes the address!!
         var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+self.address()+"&key=AIzaSyAlQWLkSPjKEvBBbMkVZjBtIminATljqis";  //console.log(url);
         var xhttp = new XMLHttpRequest();   
         xhttp.onreadystatechange = function() {
           if (this.readyState == 4 && this.status == 200) {
 
               var data = JSON.parse(this.responseText).results[0].geometry.location;
-              self.ajaxCall(data.lat, data.lng);
+              self.lat (data.lat);
+              self.lng (data.lng);
           }
         };
 
@@ -153,65 +152,67 @@ function AppViewModel() {
       
     });
 
-    this.ajaxCall = function (lat, lng) {
+    this.ajaxCall = ko.computed(function () {
         self.locationArray([]);
 
        var coordinate = {
-          "latitude" : lat,
-          "longitude" : lng,
+          "latitude" : self.lat(),
+          "longitude" : self.lng(),
            "query": self.query()
        };
        
+     if(coordinate.latitude !== undefined||'' && coordinate.longitude !== undefined||'') {
+         $.ajax({
+             type: "POST",
+             url:"http://localhost:3000/",
+             data: JSON.stringify(coordinate),
+             contentType: 'application/json',
+             success: function(data){
 
-      $.ajax({
-          type: "POST",
-          url:"http://localhost:3000/",
-          data: JSON.stringify(coordinate),
-          contentType: 'application/json',
-          success: function(data){
+                 var locationData = JSON.parse(data);
+                 document.getElementById('loader').style.display ='none';
+                 document.getElementById('myDiv').style.display ='block';
 
-            var locationData = JSON.parse(data);
-              document.getElementById('loader').style.display ='none';
-              document.getElementById('myDiv').style.display ='block';
+                 var locationVenues = locationData.response.venues;
 
-            var locationVenues = locationData.response.venues;
+                 for(var i=0; i<locationVenues.length ;i++) {
 
-              for(var i=0; i<locationVenues.length ;i++) {
+                     var locat = locationVenues[i].location.crossStreet !== undefined && locationVenues[i].location.address !== undefined ?
+                     locationVenues[i].location.address + " "+ locationVenues[i].location.crossStreet :
+                         locationVenues[i].location.city !== undefined && locationVenues[i].location.crossStreet !== undefined &&  locationVenues[i].location.address ?
+                         locationVenues[i].location.address  + " " +locationVenues[i].location.crossStreet + " " + locationVenues[i].location.city :
+                             locationVenues[i].location.address !== undefined ? locationVenues[i].location.address  : '' ;
 
-               var locat = locationVenues[i].location.crossStreet !== undefined && locationVenues[i].location.address !== undefined ?
-                           locationVenues[i].location.address + " "+ locationVenues[i].location.crossStreet :
-                           locationVenues[i].location.city !== undefined && locationVenues[i].location.crossStreet !== undefined &&  locationVenues[i].location.address ?
-                           locationVenues[i].location.address  + " " +locationVenues[i].location.crossStreet + " " + locationVenues[i].location.city :
-                           locationVenues[i].location.address !== undefined ? locationVenues[i].location.address  : '' ;
-
-                  var contact = {
-                      facebook: locationVenues[i].contact.facebookName,
-                      twitter: locationVenues[i].contact.twitter,
-                      phone: locationVenues[i].contact.phone
-                  };
+                     var contact = {
+                         facebook: locationVenues[i].contact.facebookName,
+                         twitter: locationVenues[i].contact.twitter,
+                         phone: locationVenues[i].contact.phone
+                     };
 
 
-                  self.locationArray.push({'lat': locationVenues[i].location.lat,
-                      'lng':locationVenues[i].location.lng,
-                      'title':locationVenues[i].name + locat,
-                      'crossStreet':locationVenues[i].location.crossStreet,
-                      'locat':locat,
-                       'id': i,
-                       'contact': contact
-                  });
+                     self.locationArray.push({'lat': locationVenues[i].location.lat,
+                         'lng':locationVenues[i].location.lng,
+                         'title':locationVenues[i].name + locat,
+                         'crossStreet':locationVenues[i].location.crossStreet,
+                         'locat':locat,
+                         'id': i,
+                         'contact': contact
+                     });
 
-              }
+                 }
 
-              self.initMap(self.locationArray());
-              
-          },
-          error: function(textstatus, errorThrown) {
-              alert('text status ' + textstatus + ', err ' + errorThrown);
-          }
-      });
+                 self.initMap(self.locationArray());
+
+             },
+             error: function(textstatus, errorThrown) {
+                 alert('text status ' + self.latitude + self.longitude + ', err ' + errorThrown);
+             }
+         });
+     }
+
            
         
-    };
+    });
 
     this.initMap= function(locationArray) {
 
