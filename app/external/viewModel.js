@@ -116,7 +116,7 @@ function AppViewModel() {
 
                 },
                 error: function(textstatus, errorThrown) {
-                    alert('text status ' + self.latitude + self.longitude + ', err ' + errorThrown);
+                    alert('App Crashed: Please check your Internet');
                 }
             });
         }
