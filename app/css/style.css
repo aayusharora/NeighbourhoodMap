@@ -37,10 +37,10 @@
 
     .sidenav .closebtn {
         position: absolute;
-        right: 45px;
+        right: 25px;
         font-size: 36px;
-        margin-left: 50px;
-        top: -5px;
+        margin-left: 0px;
+        top: -9px;
         z-index: 1000;
     }
 
@@ -92,12 +92,14 @@
     background: #fff;
     border-radius: 2px;
     box-sizing: border-box;
-    max-width: 330px;
-    height: 48px;
+    max-width: 340px;
+    height: 78px;
+    margin-top: 30px;
     border-bottom: 1px solid transparent;
     padding: 12px 104px 11px 64px;
     transition-property: background,box-shadow;
     transition-duration: 0.3s;
+
    }
 
    .icons {
@@ -196,4 +198,9 @@
   list-style: none;
   font-size: medium;
   color: rgba(121, 85, 72, 0.57);
+}
+
+li:hover{
+    color:black;
+
 }
