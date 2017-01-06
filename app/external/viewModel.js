@@ -7,12 +7,13 @@ function AppViewModel() {
     self.query = ko.observable('Burger');
     self.input = ko.observable('Burger');
     self.arrmarker = [];
-    self.lat = ko.observable(12.9716);
-    self.lng = ko.observable(77.5946);
     self.locationArray = ko.observableArray();
     self.mainArray = ko.observableArray();
     self.index= ko.observable();
     self.loader=ko.observable();
+    self.lat = ko.observable();
+    self.lng = ko.observable();
+    self.isSet = ko.observable(false);
     self.category = ko.observable();
     self.map = null;
     self.data=ko.observable(true);
@@ -37,8 +38,11 @@ function AppViewModel() {
                 if (this.readyState == 4 && this.status == 200) {
 
                     var data = JSON.parse(this.responseText).results[0].geometry.location;
-                    self.lat (data.lat); // setting geo-coordinates of chosen neighbourhood
-                    self.lng (data.lng);
+                    console.log(parseFloat(data.lng).toFixed(4));
+                    self.lat (parseFloat(data.lat)); // setting geo-coordinates of chosen neighbourhood
+                    self.lng (parseFloat(data.lng));
+                    self.isSet(true);
+
                 }
             };
 
@@ -59,71 +63,6 @@ function AppViewModel() {
 
     });
 
-    // ********************************************************************************************//
-
-    // POST request to own server with lat, lng and query
-    // Server made the final request to FourSquare API and provide back the data.
-
-    this.ajaxCall = ko.computed(function () {
-        self.locationArray([]);
-
-        var coordinate = {
-            "latitude" : self.lat(),
-            "longitude" : self.lng(),
-            "query": self.query()
-        };
-
-        if(coordinate.latitude !== undefined||'' && coordinate.longitude !== undefined||'') {
-            $.ajax({
-                type: "POST",
-                url:"https://watround.herokuapp.com/", // will be updated in production mode
-                data: JSON.stringify(coordinate),
-                contentType: 'application/json',
-                success: function(data){
-
-                    var locationData = JSON.parse(data);
-
-                    var locationVenues = locationData.response.venues;
-
-                    for(var i=0; i<locationVenues.length ;i++) {
-
-                        var locat = locationVenues[i].location.crossStreet !== undefined && locationVenues[i].location.address !== undefined ?
-                        locationVenues[i].location.address + " "+ locationVenues[i].location.crossStreet :
-                            locationVenues[i].location.city !== undefined && locationVenues[i].location.crossStreet !== undefined &&  locationVenues[i].location.address ?
-                            locationVenues[i].location.address  + " " +locationVenues[i].location.crossStreet + " " + locationVenues[i].location.city :
-                                locationVenues[i].location.address !== undefined ? locationVenues[i].location.address  : '' ;
-
-                        var contact = {
-                            facebook: locationVenues[i].contact.facebookName,
-                            twitter: locationVenues[i].contact.twitter,
-                            phone: locationVenues[i].contact.phone
-                        };
-
-
-                        self.locationArray.push({'lat': locationVenues[i].location.lat,
-                            'lng':locationVenues[i].location.lng,
-                            'title':locationVenues[i].name + locat,
-                            'crossStreet':locationVenues[i].location.crossStreet,
-                            'locat':locat,
-                            'id': i,
-                            'contact': contact
-                        });
-
-                    }
-
-                    self.initMap(self.locationArray());
-                    self.data(false);
-
-                },
-                error: function(textstatus, errorThrown) {
-                    alert('App Crashed: Please check your Internet');
-                }
-            });
-        }
-
-
-
-    });
 
     // ********************************************************************************************//
 
@@ -176,9 +115,9 @@ function AppViewModel() {
         // ********************************************************************************************//
 
         function setMap(locationArray) {
-
+            //console.log("callback getmap called");
             function getMap(callback) {
-
+                console.log("callback getmap called");
                 if(locationArray[0].lat !== undefined ){
                     var map = new google.maps.Map(document.getElementById('map'), {
                         zoom: 13,
@@ -196,6 +135,7 @@ function AppViewModel() {
             getMap(function(map) {
                 self.map = map; // setting map globally to viewmodel
                 setMarker(map); // calling to setMarkers on map
+                console.log("callback called");
             });
 
             // ********************************************************************************************//
@@ -204,11 +144,13 @@ function AppViewModel() {
 
                 self.arrmarker = [];
                 for(var i=0;i<locationArray.length;i++) {
+                   // console.log(i + "called outside");
                     // ******* Passing i in Closure as markers are asynchronous ******** //
                     (function locationArr(i) {
 
                         var posMark = {lat: locationArray[i].lat, lng: locationArray[i].lng};
-
+                         //console.log(i + "called");
+                        //console.log("length is :"+ locationArray.length);
                         // ********************************************************************************************//
                         function getMarker(callback) {
                             var marker = new google.maps.Marker({
@@ -279,6 +221,76 @@ function AppViewModel() {
     };
 
     // ********************************************************************************************//
+
+    // ********************************************************************************************//
+
+    // POST request to own server with lat, lng and query
+    // Server made the final request to FourSquare API and provide back the data.
+
+    this.ajaxCall = ko.computed(function () {
+
+        self.locationArray([]);
+        self.isSet();
+      if(self.isSet() == true ) {
+          var coordinate = {
+              "latitude" : parseFloat(self.lat()).toFixed(4),
+              "longitude" :  parseFloat(self.lng()).toFixed(4),
+              "query": self.query()
+          };
+
+          if(coordinate.latitude !== undefined||'' && coordinate.longitude !== undefined||'') {
+              $.ajax({
+                  type: "POST",
+                  url:"http://localhost:3000/", // will be updated in production mode
+                  data: JSON.stringify(coordinate),
+                  contentType: 'application/json',
+                  success: function(data){
+
+                      var locationData = JSON.parse(data);
+                      var locationVenues = locationData.response.venues;
+
+                      for(var i=0; i<locationVenues.length ;i++) {
+
+                          var locat = locationVenues[i].location.crossStreet !== undefined && locationVenues[i].location.address !== undefined ?
+                          locationVenues[i].location.address + " "+ locationVenues[i].location.crossStreet :
+                              locationVenues[i].location.city !== undefined && locationVenues[i].location.crossStreet !== undefined &&  locationVenues[i].location.address ?
+                              locationVenues[i].location.address  + " " +locationVenues[i].location.crossStreet + " " + locationVenues[i].location.city :
+                                  locationVenues[i].location.address !== undefined ? locationVenues[i].location.address  : '' ;
+
+                          var contact = {
+                              facebook: locationVenues[i].contact.facebookName,
+                              twitter: locationVenues[i].contact.twitter,
+                              phone: locationVenues[i].contact.phone
+                          };
+
+
+                          self.locationArray.push({'lat': locationVenues[i].location.lat,
+                              'lng':locationVenues[i].location.lng,
+                              'title':locationVenues[i].name + locat,
+                              'crossStreet':locationVenues[i].location.crossStreet,
+                              'locat':locat,
+                              'id': i,
+                              'contact': contact
+                          });
+
+                      }
+
+                      self.initMap(self.locationArray());
+                      self.data(false);
+                  },
+                  error: function(textstatus, errorThrown) {
+                      alert('App Crashed: Please check your Internet');
+                  }
+              });
+              console.log("init getmap called");
+
+          }
+
+
+
+      }
+
+    });
 
     // Check index clicked and change the style color to black by returning true
 
