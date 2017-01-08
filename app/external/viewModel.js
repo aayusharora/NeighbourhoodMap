@@ -30,36 +30,25 @@ function AppViewModel() {
         if(self.address().length > 0) {
             // Runs when user changes the address!!
             var endpoint = self.address();
-            var url = "https://maps.googleapis.com/maps/api/geocode/json?address="+ endpoint +
+            var url = "https://maps.googleapis.com/maps/api/geocode/json?address=" + endpoint +
                 "&key=AIzaSyAlQWLkSPjKEvBBbMkVZjBtIminATljqis";
 
-            var xhttp = new XMLHttpRequest();
-            xhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-
-                    var data = JSON.parse(this.responseText).results[0].geometry.location;
-                    console.log(parseFloat(data.lng).toFixed(4));
-                    self.lat (parseFloat(data.lat)); // setting geo-coordinates of chosen neighbourhood
-                    self.lng (parseFloat(data.lng));
-                    self.isSet(true);
-
+            fetch(url).then(function(res) {
+                // res instanceof Response == true.
+                if (res.ok) {
+                    res.json().then(function(res) {
+                        var data = res.results[0].geometry.location;
+                        self.lat (parseFloat(data.lat)); // setting geo-coordinates of chosen neighbourhood
+                        self.lng (parseFloat(data.lng));
+                        self.isSet(true);
+                    });
+                } else {
+                    alert("Looks like the response wasn't perfect, got status", res.status);
                 }
-            };
-
-            function reqError(err) {
-                console.log('Fetch Error :-S', err);
-            }
-
-            xhttp.onerror = reqError;
-            xhttp.open("GET", url, true);
-            xhttp.send();
-
+            }, function(e) {
+               alert("Fetch failed! ! Check your Internet Connection");
+            });
         }
-        else {
-            alert("Please enter a valid Neighbourhood");
-            self.address("Bengaluru");
-        }
-
 
     });
 
@@ -69,30 +58,11 @@ function AppViewModel() {
     // Check which location is clicked in List view , when li is clicked
 
     this.clickedPlace = function (item,data) {
-
+        var map = self.map; // Get the map
         self.index(item) ; // set the id of li item clicked globally && this will help ind() function
-        if(self.map !== null && self.arrmarker[data.id] !== undefined) {
-
-            var posMark = {lat: data.lat, lng: data.lng};  // set the location geo-coordinates
-            var map = self.map; // Get the map
-            var marker = self.arrmarker[data.id].marker; // Get the associated Marker from arrmarker array[]
-            map.setCenter(posMark); // Center map
-            map.setZoom(14);       // Zoom to particular location
-            marker.setAnimation(google.maps.Animation.BOUNCE);
-            if(track !== undefined) {
-                track.setIcon();
-            }
-            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
-            track = marker; // Maintain context of previous marker state.
-
-            setTimeout(function() {
-               marker.setAnimation(null)
-            }, 1000);
-
-        }
-        else {
-            console.log("error");
-        }
+        var posMark = {lat: data.lat, lng: data.lng};
+        map.setCenter(posMark);
+        google.maps.event.trigger(self.arrmarker[item].marker,"click");
 
     };
 
@@ -173,6 +143,7 @@ function AppViewModel() {
                             // Pushing Markers in arrmark() array
                             self.arrmarker.push(mark);   // Maintaining Array of markers
                             addInfowindow(mark.marker);  //Create Infowindows along with each marker object
+
                         });
 
                         // ********************************************************************************************//
@@ -228,8 +199,6 @@ function AppViewModel() {
     // Server made the final request to FourSquare API and provide back the data.
 
     this.ajaxCall = ko.computed(function () {
-
-        self.locationArray([]);
         self.isSet();
       if(self.isSet() == true ) {
           var coordinate = {
@@ -302,9 +271,13 @@ function AppViewModel() {
 
    // To set the user's query like coffee , beer etc. Set the query observable to clicked item
     this.myFunction = function(item){
+
         self.index(item.toLowerCase()); // Setting index to update style for ind() function
         self.input(' ');  // Making search box blank to reset filter
         self.query(item); // Setting query
+        self.locationArray([]);
+        self.mainArray([]);
+
     };
 
     // ********************************************************************************************//
