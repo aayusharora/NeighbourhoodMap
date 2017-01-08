@@ -45,8 +45,9 @@ function AppViewModel() {
                 } else {
                     alert("Looks like the response wasn't perfect, got status", res.status);
                 }
-            }, function(e) {
-               alert("Fetch failed! ! Check your Internet Connection");
+
+            }).catch(function(err) {
+                alert("Fetch failed! ! Error" + err);
             });
         }
 
